@@ -21,6 +21,15 @@ module.exports = {
       files: ['src/**/*.{ts,js}'],
       rules: {},
     },
+    {
+      files: ['*.cjs', '*.config.cjs'],
+      env: {
+        node: true,
+      },
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
   ],
   settings: {
     'import/resolver': {
