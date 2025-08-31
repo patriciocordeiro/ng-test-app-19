@@ -12,6 +12,22 @@ This project is configured with comprehensive code quality tools:
 - **Commitlint** - Conventional commit message enforcement
 - **lint-staged** - Run linters on staged files
 
+## 📋 Prerequisites
+
+- **Node.js**: Version 22.18 or higher
+- **npm**: Version 10.x or higher
+
+If using nvm, you can use the included `.nvmrc` file:
+```bash
+nvm use
+```
+
+> **Note**: Node.js 22.18 is enforced across the project:
+> - `.nvmrc` file for local development
+> - `package.json` engines field for npm version checking
+> - GitHub Actions CI/CD pipeline configuration
+> - This ensures consistent behavior across all environments
+
 ### Installation
 
 After cloning, install dependencies:
