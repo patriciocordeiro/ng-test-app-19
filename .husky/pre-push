@@ -1,0 +1,18 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Get changed TypeScript files in src/ directory
+CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD -- 'src/**/*.ts' | grep -v '.spec.ts' | xargs)
+
+if [ -z "$CHANGED_FILES" ]; then
+  echo "No TypeScript source files changed. Skipping tests."
+  exit 0
+fi
+
+echo "Running tests for changed files: $CHANGED_FILES"
+
+# Run tests only for changed files in non-watch mode
+npm test -- --watch=false --include="$CHANGED_FILES" || {
+  echo "Unit tests failed for changed files. Push aborted."
+  exit 1
+}
