@@ -22,7 +22,7 @@ module.exports = {
       rules: {},
     },
     {
-      files: ['*.cjs', '*.config.cjs'],
+      files: ['*.cjs', '*.config.cjs', 'karma.conf.js'],
       env: {
         node: true,
       },
