@@ -40,15 +40,7 @@ export class TaskStateService {
     this.#tasksState.update(state => ({ ...state, loading: true, error: null }));
 
     this.taskApi.getTasks(pageQuery, sort).subscribe({
-      next: response => {
-        const totalCount = Number(response.headers.get('X-Total-Count') || 0);
-        const tasks = response.body || [];
-
-        const paginatedResult: PaginatedResult<Task> = {
-          items: tasks,
-          totalCount: totalCount,
-        };
-
+      next: paginatedResult => {
         this.#tasksState.set({ data: paginatedResult, loading: false, error: null });
       },
       error: (err: AppError) => {

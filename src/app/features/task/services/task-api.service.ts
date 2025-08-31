@@ -6,11 +6,12 @@ import { catchError, retry } from 'rxjs/operators';
 import { environment } from '@env/environment';
 import { handleHttpError } from '@core/utils/http-error.util';
 
-import { PageQuery } from '@core/models/pagination.model';
+import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { Sort } from '@core/models/sorting.model';
 import { ApiEndpoints } from '@core/constanst/api-endpoints';
 import { createApiParams } from '@core/utils/create-api-params.util';
 import { Task } from '../models/task.model';
+import { mapToPaginatedResult } from '@/app/core/operators/operators/map-to-paginated-result.operator';
 
 /**
  * A stateless service responsible for all direct HTTP communication
@@ -27,12 +28,12 @@ export class TaskApiService {
    * [READ] Fetches a paginated and sorted list of tasks.
    * @returns An observable of the full HttpResponse to include headers like X-Total-Count.
    */
-  getTasks(pageQuery: PageQuery, sort: Sort<Task>): Observable<HttpResponse<Task[]>> {
-    const params = createApiParams(pageQuery, sort);
+  getTasks(pageQuery: PageQuery, sort: Sort<Task>): Observable<PaginatedResult<Task>> {
+    const params = createApiParams<Task>(pageQuery, sort);
 
     return this.http
       .get<Task[]>(this.tasksUrl, { params, observe: 'response' })
-      .pipe(retry(2), catchError(handleHttpError));
+      .pipe(retry(2), mapToPaginatedResult<Task>(), catchError(handleHttpError));
   }
 
   /**

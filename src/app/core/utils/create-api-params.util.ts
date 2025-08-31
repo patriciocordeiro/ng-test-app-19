@@ -4,16 +4,20 @@ import { Sort } from '../models/sorting.model';
 
 /**
  * Creates an HttpParams object from PageQuery and Sort configurations.
- * This utility centralizes the logic for building query strings for
- * paginated and sortable API endpoints.
+ * This utility is fully generic and type-safe.
+ * @template T The type of the object being sorted.
  * @param pageQuery - The pagination configuration.
- * @param sort - The sorting configuration.
+ * @param sort - The sorting configuration, ensuring the property is a key of T.
  * @returns A configured HttpParams object.
  */
-export function createApiParams(pageQuery: PageQuery, sort: Sort<never>): HttpParams {
+export function createApiParams<T>(pageQuery: PageQuery, sort: Sort<T>): HttpParams {
+  // We must cast sort.property to a string because HttpParams expects a string,
+  // but TypeScript knows it's a valid key of T. This is a safe and necessary cast.
+  const sortProperty = String(sort.property);
+
   return new HttpParams()
     .set('_page', pageQuery.page.toString())
     .set('_limit', pageQuery.limit.toString())
-    .set('_sort', sort.property as string)
+    .set('_sort', sortProperty)
     .set('_order', sort.direction);
 }
