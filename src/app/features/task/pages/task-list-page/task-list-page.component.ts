@@ -1,6 +1,6 @@
 import { Sort } from '@/app/core/models/sorting.model';
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -35,8 +35,10 @@ export class TaskListPageComponent {
   });
 
   constructor() {
-    // This effect will run initially and then again anytime #pageQuery or #sort changes
-    this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
+    // This effect will run initially and then again anytime #pageQuery or #sortQuery changes
+    effect(() => {
+      this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
+    });
   }
 
   get data() {
@@ -49,6 +51,21 @@ export class TaskListPageComponent {
 
   get error() {
     return this.tasksState().error;
+  }
+  get pageIndex(): number {
+    return this.#pageQuery().page - 1;
+  }
+
+  get pageSize(): number {
+    return this.#pageQuery().limit;
+  }
+
+  get sortActive(): string {
+    return this.#sortQuery().sortBy;
+  }
+
+  get sortDirection(): 'asc' | 'desc' {
+    return this.#sortQuery().direction;
   }
 
   // Add these methods inside the TaskListPageComponent class
@@ -67,6 +84,7 @@ export class TaskListPageComponent {
 
   /** Handles pagination changes from the paginator component. */
   onPageChange(event: PageEvent): void {
+    console.log('Page change event:', event);
     this.#pageQuery.set({
       page: event.pageIndex + 1, // Paginator is 0-indexed, API is 1-indexed
       limit: event.pageSize,

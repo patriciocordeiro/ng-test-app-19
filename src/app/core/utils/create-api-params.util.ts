@@ -17,7 +17,7 @@ export function createApiParams<T>(pageQuery: PageQuery, sort: Sort<T>): HttpPar
 
   return new HttpParams()
     .set('_page', pageQuery.page.toString())
-    .set('_limit', pageQuery.limit.toString())
-    .set('_sort', sortProperty)
+    .set('_per_page', pageQuery.limit.toString())
+    .set('_sort', sort.direction === 'asc' ? `${sortProperty}` : `-${sortProperty}`)
     .set('_order', sort.direction);
 }

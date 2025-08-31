@@ -4,10 +4,10 @@ import { Observable, tap } from 'rxjs';
 import { TaskApiService } from './task-api.service';
 
 import { ApiState } from '@core/models/api-state.model';
-import { Task } from '../models/task.model';
 import { AppError } from '@core/models/app-error.model';
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { Sort } from '@core/models/sorting.model';
+import { Task } from '../models/task.model';
 
 /**
  * A stateful service that acts as a client-side store for task-related data.

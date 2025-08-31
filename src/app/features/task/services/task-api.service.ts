@@ -1,17 +1,18 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
-import { environment } from '@env/environment';
 import { handleHttpError } from '@core/utils/http-error.util';
+import { environment } from '@env/environment';
 
+import { ApiEndpoints } from '@/app/core/constanst/api-endpoints.constant';
+import { ServerPaginatedResponse } from '@/app/core/models/server-paginated-response.model';
+import { mapToPaginatedResult } from '@/app/core/operators/operators/map-to-paginated-result.operator';
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { Sort } from '@core/models/sorting.model';
-import { ApiEndpoints } from '@/app/core/constanst/api-endpoints.constant';
 import { createApiParams } from '@core/utils/create-api-params.util';
 import { Task } from '../models/task.model';
-import { mapToPaginatedResult } from '@/app/core/operators/operators/map-to-paginated-result.operator';
 
 /**
  * A stateless service responsible for all direct HTTP communication
@@ -32,7 +33,7 @@ export class TaskApiService {
     const params = createApiParams<Task>(pageQuery, sort);
 
     return this.http
-      .get<Task[]>(this.tasksUrl, { params, observe: 'response' })
+      .get<ServerPaginatedResponse<Task>>(this.tasksUrl, { params, observe: 'response' })
       .pipe(retry(2), mapToPaginatedResult<Task>(), catchError(handleHttpError));
   }
 
