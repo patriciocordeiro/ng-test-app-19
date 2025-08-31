@@ -18,7 +18,7 @@ import {
 } from '@app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Sort } from '@core/models/sorting.model';
 import { filter } from 'rxjs/operators';
-import { TaskAddDialogComponent } from '../../components/task-add-dialog/task-add-dialog.component';
+import { TaskDialogComponent } from '../../components/task-dialog/task-dialog.component';
 import { Task } from '../../models/task.model';
 import { TaskStateService } from '../../services/task-state.service';
 
@@ -90,7 +90,7 @@ export class TaskListPageComponent {
   }
 
   onAddTask(): void {
-    const dialogRef = this.dialog.open(TaskAddDialogComponent, {
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '500px',
       disableClose: true,
     });
@@ -101,6 +101,21 @@ export class TaskListPageComponent {
       .subscribe(() => {
         console.log('Add dialog closed successfully, refreshing list...');
         this.retryLoad();
+      });
+  }
+
+  onEditTask(task: Task): void {
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: task,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(filter((result): result is Task => !!result))
+      .subscribe(updatedTask => {
+        this.snackBar.open(`Task "${updatedTask.title}" was updated.`, 'Close', {});
       });
   }
 
@@ -136,7 +151,7 @@ export class TaskListPageComponent {
             this.snackBar.open(err.message, 'Close', {
               duration: 5000,
               verticalPosition: 'top',
-              panelClass: ['error-snackbar'], // For custom styling
+              panelClass: ['error-snackbar'],
             });
           },
           complete: () => {

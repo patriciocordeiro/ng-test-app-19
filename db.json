@@ -9,7 +9,7 @@
     {
       "id": "2",
       "title": "Architect the frontend",
-      "description": "...",
+      "description": "More than one",
       "completed": true
     },
     {
@@ -622,6 +622,12 @@
       "id": "8cd8",
       "title": "sskndksnd",
       "description": "skdksmkdmsnd",
+      "completed": false
+    },
+    {
+      "id": "f6ca",
+      "title": "Hello one",
+      "description": "Mui bueno",
       "completed": false
     }
   ]

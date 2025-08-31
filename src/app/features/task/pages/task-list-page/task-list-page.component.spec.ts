@@ -1,10 +1,10 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { signal } from '@angular/core';
 import { of } from 'rxjs';
 
-import { TaskListPageComponent } from './task-list-page.component';
 import { TaskStateService } from '../../services/task-state.service';
+import { TaskListPageComponent } from './task-list-page.component';
 
 describe('TaskListPageComponent', () => {
   let component: TaskListPageComponent;

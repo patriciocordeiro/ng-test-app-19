@@ -1,7 +1,8 @@
-<h2 mat-dialog-title>Add New Task</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Task' : 'Add New Task' }}</h2>
 
 <mat-dialog-content>
-  <app-task-form></app-task-form>
+  <app-task-form [initialData]="taskToEdit ?? undefined"></app-task-form>
+
   @if (submissionError(); as errorMsg) {
     <div class="dialog-error">
       <p>{{ errorMsg }}</p>
@@ -12,11 +13,10 @@
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()" [disabled]="isSubmitting()">Cancel</button>
   <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSubmitting()">
-    <ng-container *ngIf="isSubmitting(); else saveLabel">
+    @if (isSubmitting()) {
       <span>Saving...</span>
-    </ng-container>
-    <ng-template #saveLabel>
-      <span>Save</span>
-    </ng-template>
+    } @else {
+      <span>{{ isEditMode ? 'Save Changes' : 'Save' }}</span>
+    }
   </button>
 </mat-dialog-actions>

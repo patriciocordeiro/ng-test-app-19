@@ -1,10 +1,10 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { signal } from '@angular/core';
 import { of } from 'rxjs';
 
-import { TaskDetailPageComponent } from './task-detail-page.component';
 import { TaskStateService } from '../../services/task-state.service';
+import { TaskDetailPageComponent } from './task-detail-page.component';
 
 describe('TaskDetailPageComponent', () => {
   let component: TaskDetailPageComponent;

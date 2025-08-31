@@ -20,14 +20,11 @@ export interface ConfirmationDialogData {
 })
 export class ConfirmationDialogComponent {
   constructor(
-    // Inject the data passed from the parent component
     @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
-    // Inject a reference to the dialog itself
     private dialogRef: MatDialogRef<ConfirmationDialogComponent>,
   ) {}
 
   onConfirm(): void {
-    // When the user clicks "Confirm", we close the dialog and pass back `true`.
     this.dialogRef.close(true);
   }
 }

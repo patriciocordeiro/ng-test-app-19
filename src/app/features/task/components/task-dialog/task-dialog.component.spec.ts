@@ -3,12 +3,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
-import { TaskAddDialogComponent } from './task-add-dialog.component';
 import { TaskStateService } from '../../services/task-state.service';
+import { TaskDialogComponent } from './task-dialog.component';
 
-describe('TaskAddDialogComponent', () => {
-  let component: TaskAddDialogComponent;
-  let fixture: ComponentFixture<TaskAddDialogComponent>;
+describe('TaskDialogComponent', () => {
+  let component: TaskDialogComponent;
+  let fixture: ComponentFixture<TaskDialogComponent>;
 
   const mockTaskStateService = {
     addTask: jasmine.createSpy('addTask').and.returnValue(
@@ -23,7 +23,7 @@ describe('TaskAddDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TaskAddDialogComponent, BrowserAnimationsModule],
+      imports: [TaskDialogComponent, BrowserAnimationsModule],
       providers: [
         {
           provide: TaskStateService,
@@ -38,7 +38,7 @@ describe('TaskAddDialogComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TaskAddDialogComponent);
+    fixture = TestBed.createComponent(TaskDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

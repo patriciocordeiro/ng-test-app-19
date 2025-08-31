@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,6 +18,9 @@ export type TaskFormData = Omit<Task, 'id' | 'completed'>;
 export class TaskFormComponent {
   private fb = inject(FormBuilder);
 
+  // Accept an existing task to populate the form for editing
+  @Input() initialData?: Task;
+
   // Emits the form data when the user saves.
   @Output() save = new EventEmitter<TaskFormData>();
 
@@ -25,6 +28,19 @@ export class TaskFormComponent {
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required]],
   });
+
+  ngOnInit(): void {
+    this.initializeFormWithData();
+  }
+
+  private initializeFormWithData() {
+    if (this.initialData) {
+      this.form.patchValue({
+        title: this.initialData.title,
+        description: this.initialData.description,
+      });
+    }
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
