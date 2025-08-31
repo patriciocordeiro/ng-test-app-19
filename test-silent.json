@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "test:silent": "ng test --include=\"**/task-api.service.spec.ts\" --watch=false --browsers=ChromeHeadless --reporters=spec --silent > /dev/null 2>&1 && echo '✅ All tests passed silently'"
+  }
+}
