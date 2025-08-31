@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Sort as MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { filter } from 'rxjs/operators';
+import { TaskAddDialogComponent } from '../../components/task-add-dialog/task-add-dialog.component';
 import { Task } from '../../models/task.model';
 import { TaskStateService } from '../../services/task-state.service';
 
@@ -42,6 +43,7 @@ export class TaskListPageComponent {
 
   private dialog = inject(MatDialog);
   readonly deletingTaskId = signal<number | null>(null);
+  readonly isAddingTask = signal(false);
 
   constructor() {
     effect(() => {
@@ -95,6 +97,21 @@ export class TaskListPageComponent {
 
   retryLoad(): void {
     this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
+  }
+
+  onAddTask(): void {
+    const dialogRef = this.dialog.open(TaskAddDialogComponent, {
+      width: '500px',
+      disableClose: true,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(filter(result => !!result))
+      .subscribe(() => {
+        console.log('Add dialog closed successfully, refreshing list...');
+        this.retryLoad();
+      });
   }
 
   onDeleteTask(task: Task): void {
