@@ -1,1 +1,66 @@
-<p>task-list-page works!</p>
+<div class="task-list-container">
+    <h2>My Tasks</h2>
+
+    <!-- Use a switch to handle the different states from the service -->
+    @switch (true) {
+    <!-- Case 1: We are in a loading state -->
+    @case (loading) {
+    <div class="state-indicator loading">
+        <p>Loading tasks...</p>
+        <!-- In a real app, you'd put a mat-spinner or similar component here -->
+    </div>
+    }
+
+    <!-- Case 2: An error has occurred -->
+    @case (error && !!error.status) {
+    <div class="state-indicator error">
+        <h3>An Error Occurred</h3>
+        <p>{{ error.message }}</p>
+        <button (click)="retryLoad()">Retry</button>
+    </div>
+    }
+
+    <!-- Case 3: We have data to display -->
+    @case (data && !!data.items.length) {
+    <div class="task-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the items in our paginated result -->
+                @for (task of data!.items; track task.id) {
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.completed ? 'Completed' : 'Pending' }}</td>
+                    <td>
+                        <!-- Action buttons will go here -->
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </td>
+                </tr>
+                } @empty {
+                <!-- This block renders if the items array is empty -->
+                <tr>
+                    <td colspan="4">No tasks found.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- We will add a paginator component here later -->
+        <div class="paginator">
+            <p>
+                Showing {{data!.items.length }} of {{data!.totalCount }} tasks.
+            </p>
+        </div>
+    </div>
+    }
+    }
+</div>

@@ -13,7 +13,7 @@ import { Sort } from '../models/sorting.model';
 export function createApiParams<T>(pageQuery: PageQuery, sort: Sort<T>): HttpParams {
   // We must cast sort.property to a string because HttpParams expects a string,
   // but TypeScript knows it's a valid key of T. This is a safe and necessary cast.
-  const sortProperty = String(sort.property);
+  const sortProperty = String(sort.sortBy);
 
   return new HttpParams()
     .set('_page', pageQuery.page.toString())

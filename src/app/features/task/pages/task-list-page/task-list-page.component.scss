@@ -1,0 +1,44 @@
+.task-list-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.state-indicator {
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 1rem;
+
+  &.error {
+    border-color: #f44336;
+    color: #f44336;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
+
+.paginator {
+  margin-top: 1rem;
+  text-align: right;
+  font-style: italic;
+}

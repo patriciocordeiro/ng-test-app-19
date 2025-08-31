@@ -11,7 +11,8 @@
     "lint:fix": "eslint src --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "server": "json-server --watch db.json"
   },
   "private": true,
   "engines": {
