@@ -18,11 +18,13 @@ This project is configured with comprehensive code quality tools:
 - **npm**: Version 10.x or higher
 
 If using nvm, you can use the included `.nvmrc` file:
+
 ```bash
 nvm use
 ```
 
 > **Note**: Node.js 22.18 is enforced across the project:
+>
 > - `.nvmrc` file for local development
 > - `package.json` engines field for npm version checking
 > - GitHub Actions CI/CD pipeline configuration
@@ -143,6 +145,20 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 - `.prettierrc.js` - Prettier formatting rules
 - `commitlint.config.cjs` - Commit message linting
 - `.husky/` - Git hook scripts
+
+## Path aliases
+
+This project defines TypeScript path aliases so you can import using `@/` and other short names.
+
+Examples:
+
+```ts
+import { TaskService } from '@/app/features/task/services/task.service';
+import { ApiState } from '@core/models/api-state.model';
+import { environment } from '@env/environment';
+```
+
+These are configured in `tsconfig.json` under `compilerOptions.paths` and `baseUrl: 'src'`.
 
 ## Additional Resources
 

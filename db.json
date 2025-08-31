@@ -1,0 +1,70 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Zebra care",
+      "description": "...",
+      "completed": true
+    },
+    {
+      "id": 2,
+      "title": "Architect the frontend",
+      "description": "...",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "title": "Implement task detail view",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Build the UI",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 5,
+      "title": "Deploy to production",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 6,
+      "title": "Master Angular Signals",
+      "description": "...",
+      "completed": true
+    },
+    {
+      "id": 7,
+      "title": "Configure CI/CD pipeline",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 8,
+      "title": "Write unit tests",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 9,
+      "title": "Setup json-server",
+      "description": "...",
+      "completed": true
+    },
+    {
+      "id": 10,
+      "title": "Learn RxJS operators",
+      "description": "...",
+      "completed": false
+    },
+    {
+      "id": 11,
+      "title": "Optimize performance",
+      "description": "...",
+      "completed": false
+    }
+  ]
+}
