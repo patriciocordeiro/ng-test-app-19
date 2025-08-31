@@ -1,8 +1,16 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Get changed TypeScript files in src/ directory
-CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD -- 'src/**/*.ts' | grep -v '.spec.ts' | xargs)
+# Determine a sensible diff range: prefer the tracked upstream branch if available
+UPSTREAM=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)
+if [ -n "$UPSTREAM" ]; then
+  DIFF_RANGE="$UPSTREAM...HEAD"
+else
+  DIFF_RANGE="HEAD~1..HEAD"
+fi
+
+# Get changed TypeScript files in src/ directory (exclude spec files)
+CHANGED_FILES=$(git diff --name-only $DIFF_RANGE -- 'src/**/*.ts' | grep -v '.spec.ts' | xargs || true)
 
 if [ -z "$CHANGED_FILES" ]; then
   echo "No TypeScript source files changed. Skipping tests."
@@ -11,8 +19,27 @@ fi
 
 echo "Running tests for changed files: $CHANGED_FILES"
 
-# Run tests only for changed files in non-watch mode
-npm test -- --watch=false --include="$CHANGED_FILES" || {
-  echo "Unit tests failed for changed files. Push aborted."
-  exit 1
-}
+TMPFILE=$(mktemp /tmp/pre-push-tests.XXXXXX)
+# Run tests only for changed files in non-watch mode, capture output
+# disable errexit so we can inspect the exit code and output
+set +e
+npm test -- --watch=false --include="$CHANGED_FILES" > "$TMPFILE" 2>&1
+TEST_EXIT=$?
+set -e
+
+# If tests command failed, check if it was just because no tests matched (0 executed)
+if [ $TEST_EXIT -ne 0 ]; then
+  if LC_ALL=C grep -qiE "executed\s+0\s+of\s+0|total:\s*0\s*success" "$TMPFILE"; then
+    echo "No tests were executed for the changed files. Treating as success."
+    TEST_EXIT=0
+  else
+    echo "Unit tests failed for changed files. Push aborted."
+    echo "---- Test output ----"
+    sed -n '1,200p' "$TMPFILE"
+    rm -f "$TMPFILE"
+    exit $TEST_EXIT
+  fi
+fi
+
+rm -f "$TMPFILE"
+exit 0
