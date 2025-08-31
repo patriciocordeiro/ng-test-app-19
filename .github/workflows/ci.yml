@@ -43,4 +43,5 @@ jobs:
       - name: Run Unit Tests
         env:
           CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
-        run: npm test -- --watch=false --browsers=ChromeHeadless --no-sandbox
+          CHROME_FLAGS: '--no-sandbox --disable-web-security --disable-gpu --disable-dev-shm-usage'
+        run: npm test -- --watch=false --browsers=ChromeHeadless
