@@ -8,7 +8,7 @@ import { handleHttpError } from '@core/utils/http-error.util';
 
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { Sort } from '@core/models/sorting.model';
-import { ApiEndpoints } from '@core/constanst/api-endpoints';
+import { ApiEndpoints } from '@/app/core/constanst/api-endpoints.constant';
 import { createApiParams } from '@core/utils/create-api-params.util';
 import { Task } from '../models/task.model';
 import { mapToPaginatedResult } from '@/app/core/operators/operators/map-to-paginated-result.operator';
