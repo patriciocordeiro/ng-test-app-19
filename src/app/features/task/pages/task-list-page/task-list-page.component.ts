@@ -1,12 +1,18 @@
 import { Sort } from '@/app/core/models/sorting.model';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '@/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Sort as MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { filter } from 'rxjs/operators';
 import { Task } from '../../models/task.model';
 import { TaskStateService } from '../../services/task-state.service';
 
@@ -34,8 +40,10 @@ export class TaskListPageComponent {
     sortBy: 'title',
   });
 
+  private dialog = inject(MatDialog);
+  readonly deletingTaskId = signal<number | null>(null);
+
   constructor() {
-    // This effect will run initially and then again anytime #pageQuery or #sortQuery changes
     effect(() => {
       this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
     });
@@ -68,12 +76,7 @@ export class TaskListPageComponent {
     return this.#sortQuery().direction;
   }
 
-  // Add these methods inside the TaskListPageComponent class
-
-  /** Handles sorting changes from the table header. */
   onSortChange(sort: MatSort): void {
-    // The sort direction can be '' when the user cycles through sorting states.
-    // We'll treat '' as 'asc' or reset to a default. For now, we only update if a direction is set.
     if (sort.direction) {
       this.#sortQuery.set({
         sortBy: sort.active as keyof Task,
@@ -82,7 +85,6 @@ export class TaskListPageComponent {
     }
   }
 
-  /** Handles pagination changes from the paginator component. */
   onPageChange(event: PageEvent): void {
     console.log('Page change event:', event);
     this.#pageQuery.set({
@@ -93,5 +95,37 @@ export class TaskListPageComponent {
 
   retryLoad(): void {
     this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
+  }
+
+  onDeleteTask(task: Task): void {
+    const dialogData: ConfirmationDialogData = {
+      title: 'Confirm Deletion',
+      message: `Are you sure you want to delete the task "${task.title}"? This action cannot be undone.`,
+    };
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: dialogData,
+      width: '400px',
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(filter(result => !!result))
+      .subscribe(() => {
+        this.deletingTaskId.set(task.id);
+
+        this.taskState.deleteTask(task.id).subscribe({
+          next: () => {
+            console.log('Delete successful, refreshing list...');
+            this.retryLoad();
+          },
+          error: err => {
+            console.error('Delete failed:', err);
+          },
+          complete: () => {
+            this.deletingTaskId.set(null);
+          },
+        });
+      });
   }
 }

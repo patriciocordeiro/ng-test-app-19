@@ -50,8 +50,14 @@
                     <button mat-icon-button color="primary" aria-label="Edit task">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" aria-label="Delete task">
+                    <!-- UPDATE THIS BUTTON -->
+                    <button mat-icon-button color="warn" [disabled]="deletingTaskId() === task.id"
+                        (click)="onDeleteTask(task)" aria-label="Delete task">
+                        @if (deletingTaskId() === task.id) {
+                        <mat-spinner [diameter]="20"></mat-spinner>
+                        } @else {
                         <mat-icon>delete</mat-icon>
+                        }
                     </button>
                 </td>
             </ng-container>
