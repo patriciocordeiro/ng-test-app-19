@@ -1,3 +1,4 @@
+import { AppError } from '@/app/core/models/app-error.model';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,7 +20,7 @@ export class TaskAddDialogComponent {
   @ViewChild(TaskFormComponent) taskFormComponent!: TaskFormComponent;
 
   readonly isSubmitting = signal(false);
-  readonly error = signal<string | null>(null);
+  readonly submissionError = signal<string | null>(null);
 
   onSave(): void {
     const form = this.taskFormComponent.form;
@@ -29,15 +30,16 @@ export class TaskAddDialogComponent {
     }
 
     this.isSubmitting.set(true);
+    this.submissionError.set(null);
 
     this.taskState.addTask(form.value).subscribe({
       next: () => {
-        // On success, close the dialog. The list page will handle the refresh.
-        this.dialogRef.close(true); // Pass back a 'true' to indicate success
+        this.dialogRef.close(true);
       },
-      error: err => {
+      error: (err: AppError) => {
         console.error('Failed to add task', err);
-        this.error.set('Failed to add task');
+        // Set the error message for the template to display
+        this.submissionError.set(err.message);
         this.isSubmitting.set(false);
       },
     });

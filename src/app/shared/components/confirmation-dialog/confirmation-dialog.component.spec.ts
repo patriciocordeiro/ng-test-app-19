@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 
@@ -8,7 +10,22 @@ describe('ConfirmationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConfirmationDialogComponent],
+      imports: [ConfirmationDialogComponent, BrowserAnimationsModule],
+      providers: [
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            title: 'Test Title',
+            message: 'Test Message',
+          },
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {
+            close: jasmine.createSpy('close'),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationDialogComponent);

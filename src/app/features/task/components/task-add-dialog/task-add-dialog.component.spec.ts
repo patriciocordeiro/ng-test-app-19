@@ -1,4 +1,7 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { TaskAddDialogComponent } from './task-add-dialog.component';
 
@@ -8,7 +11,16 @@ describe('TaskAddDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TaskAddDialogComponent],
+      imports: [TaskAddDialogComponent, BrowserAnimationsModule],
+      providers: [
+        provideHttpClient(),
+        {
+          provide: MatDialogRef,
+          useValue: {
+            close: jasmine.createSpy('close'),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaskAddDialogComponent);

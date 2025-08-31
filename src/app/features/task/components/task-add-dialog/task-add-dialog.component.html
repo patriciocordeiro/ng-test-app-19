@@ -2,9 +2,9 @@
 
 <mat-dialog-content>
   <app-task-form></app-task-form>
-  @if (error(); as error) {
-    <div *ngIf="error" class="error" role="alert" style="color: #b91c1c; margin-top: 0.5rem">
-      {{ error }}
+  @if (submissionError(); as errorMsg) {
+    <div class="dialog-error">
+      <p>{{ errorMsg }}</p>
     </div>
   }
 </mat-dialog-content>

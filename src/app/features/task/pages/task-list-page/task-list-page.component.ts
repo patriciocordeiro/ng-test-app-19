@@ -1,8 +1,4 @@
-import { Sort } from '@/app/core/models/sorting.model';
-import {
-  ConfirmationDialogComponent,
-  ConfirmationDialogData,
-} from '@/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { AppError } from '@/app/core/models/app-error.model';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,8 +6,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort as MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '@app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { Sort } from '@core/models/sorting.model';
 import { filter } from 'rxjs/operators';
 import { TaskAddDialogComponent } from '../../components/task-add-dialog/task-add-dialog.component';
 import { Task } from '../../models/task.model';
@@ -27,6 +29,7 @@ import { TaskStateService } from '../../services/task-state.service';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './task-list-page.component.html',
   styleUrl: './task-list-page.component.scss',
@@ -42,6 +45,7 @@ export class TaskListPageComponent {
   });
 
   private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
   readonly deletingTaskId = signal<number | null>(null);
   readonly isAddingTask = signal(false);
 
@@ -133,11 +137,21 @@ export class TaskListPageComponent {
 
         this.taskState.deleteTask(task.id).subscribe({
           next: () => {
-            console.log('Delete successful, refreshing list...');
+            // SHOW SUCCESS NOTIFICATION
+            this.snackBar.open(`Task "${task.title}" was deleted.`, 'Close', {
+              duration: 3000,
+              verticalPosition: 'top',
+            });
+
             this.retryLoad();
           },
-          error: err => {
-            console.error('Delete failed:', err);
+          error: (err: AppError) => {
+            // SHOW ERROR NOTIFICATION
+            this.snackBar.open(err.message, 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'], // For custom styling
+            });
           },
           complete: () => {
             this.deletingTaskId.set(null);

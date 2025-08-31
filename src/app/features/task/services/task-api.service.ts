@@ -6,11 +6,11 @@ import { catchError, retry } from 'rxjs/operators';
 import { handleHttpError } from '@core/utils/http-error.util';
 import { environment } from '@env/environment';
 
-import { ApiEndpoints } from '@/app/core/constanst/api-endpoints.constant';
-import { ServerPaginatedResponse } from '@/app/core/models/server-paginated-response.model';
-import { mapToPaginatedResult } from '@/app/core/operators/operators/map-to-paginated-result.operator';
+import { ApiEndpoints } from '@core/constanst/api-endpoints.constant';
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
+import { ServerPaginatedResponse } from '@core/models/server-paginated-response.model';
 import { Sort } from '@core/models/sorting.model';
+import { mapToPaginatedResult } from '@core/operators/operators/map-to-paginated-result.operator';
 import { createApiParams } from '@core/utils/create-api-params.util';
 import { Task } from '../models/task.model';
 
