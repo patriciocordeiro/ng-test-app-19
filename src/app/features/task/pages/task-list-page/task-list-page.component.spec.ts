@@ -1,17 +1,36 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { signal } from '@angular/core';
+import { of } from 'rxjs';
 
 import { TaskListPageComponent } from './task-list-page.component';
+import { TaskStateService } from '../../services/task-state.service';
 
 describe('TaskListPageComponent', () => {
   let component: TaskListPageComponent;
   let fixture: ComponentFixture<TaskListPageComponent>;
 
+  const mockTaskStateService = {
+    tasksState: signal({
+      data: null,
+      loading: false,
+      error: null,
+    }),
+    loadTasks: jasmine.createSpy('loadTasks'),
+    addTask: jasmine.createSpy('addTask').and.returnValue(of({})),
+    updateTask: jasmine.createSpy('updateTask').and.returnValue(of({})),
+    deleteTask: jasmine.createSpy('deleteTask').and.returnValue(of({})),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TaskListPageComponent, BrowserAnimationsModule],
-      providers: [provideHttpClient()],
+      providers: [
+        {
+          provide: TaskStateService,
+          useValue: mockTaskStateService,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaskListPageComponent);

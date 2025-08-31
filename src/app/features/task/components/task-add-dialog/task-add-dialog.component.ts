@@ -1,8 +1,8 @@
-import { AppError } from '@/app/core/models/app-error.model';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { AppError } from '@app/core/models/app-error.model';
 import { TaskStateService } from '../../services/task-state.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
 

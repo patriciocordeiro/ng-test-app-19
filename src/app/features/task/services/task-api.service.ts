@@ -6,7 +6,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { handleHttpError } from '@core/utils/http-error.util';
 import { environment } from '@env/environment';
 
-import { ApiEndpoints } from '@/app/core/constants/api-endpoints.constant';
+import { ApiEndpoints } from '@core/constants/api-endpoints.constant';
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { ServerPaginatedResponse } from '@core/models/server-paginated-response.model';
 import { Sort } from '@core/models/sorting.model';
@@ -27,6 +27,8 @@ export class TaskApiService {
 
   /**
    * [READ] Fetches a paginated and sorted list of tasks.
+   * @param pageQuery The pagination and filtering options.
+   * @param sort The sorting options.
    * @returns An observable of the full HttpResponse to include headers like X-Total-Count.
    */
   getTasks(pageQuery: PageQuery, sort: Sort<Task>): Observable<PaginatedResult<Task>> {
@@ -39,6 +41,8 @@ export class TaskApiService {
 
   /**
    * [CREATE] Creates a new task.
+   * @param taskData The data for the new task.
+   * @returns An observable of the created task.
    */
   addTask(taskData: Omit<Task, 'id' | 'completed'>): Observable<Task> {
     const newTask: Omit<Task, 'id'> = { ...taskData, completed: false };
@@ -47,6 +51,8 @@ export class TaskApiService {
 
   /**
    * [UPDATE] Updates an existing task.
+   * @param task The task to update.
+   * @returns An observable of the updated task.
    */
   updateTask(task: Task): Observable<Task> {
     return this.http
@@ -56,8 +62,22 @@ export class TaskApiService {
 
   /**
    * [DELETE] Deletes a task by its ID.
+   * @param taskId The ID of the task to delete.
+   * @returns An observable of the deletion result.
    */
   deleteTask(taskId: number): Observable<void> {
     return this.http.delete<void>(`${this.tasksUrl}/${taskId}`).pipe(catchError(handleHttpError));
+  }
+
+  /**
+   * Fetches a single task by its ID.
+   * @param id The ID of the task to fetch.
+   * @returns An observable of the task.
+   */
+
+  getTaskById(id: number): Observable<Task> {
+    return this.http
+      .get<Task>(`${this.tasksUrl}/${id.toString()}`)
+      .pipe(retry(2), catchError(handleHttpError));
   }
 }

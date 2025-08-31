@@ -1,1 +1,30 @@
 <p>task-detail-page works!</p>
+<div class="detail-container">
+  @if (loading()) {
+    <div class="state-indicator loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
+
+  @if (error(); as err) {
+    <div class="state-indicator error">
+      <h3>Could not load task</h3>
+      <p>{{ err.message }}</p>
+    </div>
+  }
+
+  @if (task(); as t) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ t.title }}</mat-card-title>
+        <mat-card-subtitle> Status: {{ t.completed ? 'Completed' : 'Pending' }} </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ t.description }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-stroked-button routerLink="/tasks">Back to List</a>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

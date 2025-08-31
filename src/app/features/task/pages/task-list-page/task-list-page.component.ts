@@ -1,6 +1,5 @@
-import { AppError } from '@/app/core/models/app-error.model';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +8,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort as MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
+import { AppError } from '@app/core/models/app-error.model';
+import { AppRoutes } from '@core/constants/routes.constants';
+
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
@@ -30,6 +33,7 @@ import { TaskStateService } from '../../services/task-state.service';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    RouterLink,
   ],
   templateUrl: './task-list-page.component.html',
   styleUrl: './task-list-page.component.scss',
@@ -48,38 +52,20 @@ export class TaskListPageComponent {
   private snackBar = inject(MatSnackBar);
   readonly deletingTaskId = signal<number | null>(null);
   readonly isAddingTask = signal(false);
+  readonly Routes = AppRoutes;
+
+  readonly data = computed(() => this.tasksState().data);
+  readonly loading = computed(() => this.tasksState().loading);
+  readonly error = computed(() => this.tasksState().error);
+  readonly pageIndex = computed(() => this.#pageQuery().page - 1);
+  readonly pageSize = computed(() => this.#pageQuery().limit);
+  readonly sortActive = computed(() => this.#sortQuery().sortBy);
+  readonly sortDirection = computed(() => this.#sortQuery().direction);
 
   constructor() {
     effect(() => {
       this.taskState.loadTasks(this.#pageQuery(), this.#sortQuery());
     });
-  }
-
-  get data() {
-    return this.tasksState().data;
-  }
-
-  get loading() {
-    return this.tasksState().loading;
-  }
-
-  get error() {
-    return this.tasksState().error;
-  }
-  get pageIndex(): number {
-    return this.#pageQuery().page - 1;
-  }
-
-  get pageSize(): number {
-    return this.#pageQuery().limit;
-  }
-
-  get sortActive(): string {
-    return this.#sortQuery().sortBy;
-  }
-
-  get sortDirection(): 'asc' | 'desc' {
-    return this.#sortQuery().direction;
   }
 
   onSortChange(sort: MatSort): void {

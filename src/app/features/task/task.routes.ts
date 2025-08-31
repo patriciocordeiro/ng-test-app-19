@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import { TaskListPageComponent } from './pages/task-list-page/task-list-page.component';
+import { TaskLayoutComponent } from './task-layout/task-layout.component';
 
 export const TASK_ROUTES: Routes = [
   {
     path: '',
-    component: TaskListPageComponent,
-
+    component: TaskLayoutComponent,
     children: [
       {
         path: '',
