@@ -6,7 +6,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { handleHttpError } from '@core/utils/http-error.util';
 import { environment } from '@env/environment';
 
-import { ApiEndpoints } from '@core/constanst/api-endpoints.constant';
+import { ApiEndpoints } from '@/app/core/constants/api-endpoints.constant';
 import { PageQuery, PaginatedResult } from '@core/models/pagination.model';
 import { ServerPaginatedResponse } from '@core/models/server-paginated-response.model';
 import { Sort } from '@core/models/sorting.model';
