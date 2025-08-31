@@ -3,42 +3,26 @@
   margin: 0 auto;
 }
 
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .state-indicator {
-  padding: 2rem;
-  text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 4rem;
   margin-top: 1rem;
 
   &.error {
-    border-color: #f44336;
     color: #f44336;
   }
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.table-container {
   margin-top: 1rem;
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f2f2f2;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-}
-
-.paginator {
-  margin-top: 1rem;
-  text-align: right;
-  font-style: italic;
 }

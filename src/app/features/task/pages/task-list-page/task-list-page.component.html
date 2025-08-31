@@ -1,66 +1,71 @@
 <div class="task-list-container">
-    <h2>My Tasks</h2>
+    <header class="page-header">
+        <h2>My Tasks</h2>
+        <!-- We'll wire this up later -->
+        <button mat-flat-button color="primary">
+            <mat-icon>add</mat-icon>
+            Add Task
+        </button>
+    </header>
 
-    <!-- Use a switch to handle the different states from the service -->
-    @switch (true) {
-    <!-- Case 1: We are in a loading state -->
-    @case (loading) {
+    <!-- Case 1: Loading State -->
+    @if (loading) {
     <div class="state-indicator loading">
-        <p>Loading tasks...</p>
-        <!-- In a real app, you'd put a mat-spinner or similar component here -->
+        <mat-spinner></mat-spinner>
     </div>
     }
 
-    <!-- Case 2: An error has occurred -->
-    @case (error && !!error.status) {
+    <!-- Case 2: Error State -->
+    @if (error; as err) {
     <div class="state-indicator error">
         <h3>An Error Occurred</h3>
-        <p>{{ error.message }}</p>
-        <button (click)="retryLoad()">Retry</button>
+        <p>{{ err.message }}</p>
+        <button mat-flat-button color="warn" (click)="retryLoad()">Retry</button>
     </div>
     }
 
-    <!-- Case 3: We have data to display -->
-    @case (data && !!data.items.length) {
-    <div class="task-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Loop through the items in our paginated result -->
-                @for (task of data!.items; track task.id) {
-                <tr>
-                    <td>{{ task.title }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.completed ? 'Completed' : 'Pending' }}</td>
-                    <td>
-                        <!-- Action buttons will go here -->
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </td>
-                </tr>
-                } @empty {
-                <!-- This block renders if the items array is empty -->
-                <tr>
-                    <td colspan="4">No tasks found.</td>
-                </tr>
-                }
-            </tbody>
+    <!-- Case 3: Data State -->
+    @if (data; as taskData) {
+    <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="taskData.items" matSort #sort="matSort" (matSortChange)="onSortChange($event)">
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                <td mat-cell *matCellDef="let task">{{ task.title }}</td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="completed">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let task">{{ task.completed ? 'Completed' : 'Pending' }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let task">
+                    <button mat-icon-button color="primary" aria-label="Edit task">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" aria-label="Delete task">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['title', 'completed', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['title', 'completed', 'actions'];"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="3">No tasks found.</td>
+            </tr>
         </table>
 
-        <!-- We will add a paginator component here later -->
-        <div class="paginator">
-            <p>
-                Showing {{data!.items.length }} of {{data!.totalCount }} tasks.
-            </p>
-        </div>
+        <mat-paginator [length]="taskData.totalCount" [pageSize]="10" [pageSizeOptions]="[5, 10, 25]"
+            (page)="onPageChange($event)" aria-label="Select page of tasks">
+        </mat-paginator>
     </div>
-    }
     }
 </div>

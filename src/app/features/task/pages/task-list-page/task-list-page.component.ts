@@ -1,11 +1,26 @@
 import { Sort } from '@/app/core/models/sorting.model';
+import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Sort as MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { Task } from '../../models/task.model';
 import { TaskStateService } from '../../services/task-state.service';
 
 @Component({
   selector: 'app-task-list-page',
-  imports: [],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './task-list-page.component.html',
   styleUrl: './task-list-page.component.scss',
 })
@@ -34,6 +49,28 @@ export class TaskListPageComponent {
 
   get error() {
     return this.tasksState().error;
+  }
+
+  // Add these methods inside the TaskListPageComponent class
+
+  /** Handles sorting changes from the table header. */
+  onSortChange(sort: MatSort): void {
+    // The sort direction can be '' when the user cycles through sorting states.
+    // We'll treat '' as 'asc' or reset to a default. For now, we only update if a direction is set.
+    if (sort.direction) {
+      this.#sortQuery.set({
+        sortBy: sort.active as keyof Task,
+        direction: sort.direction,
+      });
+    }
+  }
+
+  /** Handles pagination changes from the paginator component. */
+  onPageChange(event: PageEvent): void {
+    this.#pageQuery.set({
+      page: event.pageIndex + 1, // Paginator is 0-indexed, API is 1-indexed
+      limit: event.pageSize,
+    });
   }
 
   retryLoad(): void {
